@@ -22,8 +22,9 @@ for i=1:length(names)
    dailyData.(companyName) = raw;
    end
 end
-
+companyNames = names;
+titleRawData = title;
 cd ('../')
-save('rawData.mat','dailyData','title')
+save('rawData.mat','dailyData','titleRawData','companyNames')
 
 
