@@ -8,6 +8,7 @@ end
 names(1:2)=[];
 title={'Day','Month','Year','Date','Open','High','Low','Close','Volume','OpenInt'};
 dailyData=[];
+companyNames={};
 for i=1:length(names)
    companyName = strtok(names{i},'.');
    raw = importdata(names{i});
@@ -20,9 +21,9 @@ for i=1:length(names)
    year = floor(dates/10000);
    raw = [day month year raw];
    dailyData.(companyName) = raw;
+   companyNames = [companyNames {companyName}];
    end
 end
-companyNames = names;
 titleRawData = title;
 cd ('../')
 save('rawData.mat','dailyData','titleRawData','companyNames')
