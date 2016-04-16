@@ -17,30 +17,38 @@ function getNASDAQData
         endInd = strfind(text,'</span>');
         for j=1:length(startInd)
            current = text(startInd(j):endInd(j));
-           current = strtok(current,'>');
-           current = current(1:end-1);
+           [~,current] = strtok(current,'>');
+           current = current(2:end-1);
            dashInd = strfind(current,'/');
+           rowIndex = ceil(j/5);
+           if (~strcmp(current,'--'))
             if mod(j,5) == 1
-                day = str2double(current(1:dashInd(1)));
-                month = str2double(current(dashInd(1)+1:dashInd(2)));
-                year = str2double(current(dashInd(2)+1:end));
-                currentDivData(j,1) = day;
-                currentDivData(j,2) = month;
-                currentDivData(j,3) = year;
+                day = str2num(current(1:dashInd(1)-1));
+                month = str2num(current(dashInd(1)+1:dashInd(2)-1));
+                year = str2num(current(dashInd(2)+1:end));
+                currentDivData(rowIndex,1) = day;
+                currentDivData(rowIndex,2) = month;
+                currentDivData(rowIndex,3) = year;
                 
             elseif mod(j,5) == 2
-                currentDivData(j,4) = str2double(current);
+                currentDivData(rowIndex,4) = str2num(current);
             elseif mod(j,5) == 3
-                day = str2double(current(1:dashInd(1)));
-                month = str2double(current(dashInd(1)+1:dashInd(2)));
-                year = str2double(current(dashInd(2)+1:end));
-                currentDivData(j,5) = day;
-                currentDivData(j,6) = month;
-                currentDivData(j,7) = year;
+                day = str2num(current(1:dashInd(1)-1));
+                month = str2num(current(dashInd(1)+1:dashInd(2)-1));
+                year = str2num(current(dashInd(2)+1:end));
+                currentDivData(rowIndex,5) = day;
+                currentDivData(rowIndex,6) = month;
+                currentDivData(rowIndex,7) = year;
             end
                     
+           end
         end
+        divData.(companyNames{i}) = currentDivData;
         end
+        
     end
+    %First ones are ex div dates. Next ones are announcement dates.
+    divDataTitle = {'Day','Month','Year','Div Amount','Day','Month','Year'};
     
+    save('divData.mat','divData','divDataTitle');
 end
